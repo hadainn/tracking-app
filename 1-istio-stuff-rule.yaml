@@ -1,0 +1,26 @@
+kind: VirtualService
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: a-set-of-routing-rules-we-can-call-this-anything  
+  namespace: default
+spec:
+  hosts:
+    - fleetman-staff-service.default.svc.cluster.local  
+  http:
+    - route:
+        - destination:
+            host: fleetman-staff-service.default.svc.cluster.local # The Target DNS name
+            subset: v1  
+          weight: 100
+---
+kind: DestinationRule       
+apiVersion: networking.istio.io/v1alpha3
+metadata:
+  name: grouping-rules-for-our-photograph-canary-release 
+  namespace: default
+spec:
+  host: fleetman-staff-service 
+  subsets:
+    - labels:   
+        version: v1 
+      name: v1
